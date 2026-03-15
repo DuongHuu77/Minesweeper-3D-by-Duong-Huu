@@ -1,0 +1,28 @@
+# Bỏ qua các thư mục tự tạo của Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+
+# Bỏ qua các file cấu hình cá nhân của Visual Studio / Rider
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.tmp
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Bỏ qua file rác của hệ điều hành
+.DS_Store
+Thumbs.db
