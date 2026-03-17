@@ -5,18 +5,25 @@ public class PlayerInteraction : MonoBehaviour
     public Camera cam;
     public float distance = 5f;
 
-    private Tile lastTile; // Biến lưu trữ ô gạch đang được highlight
+    private Tile lastTile; 
+
+    [Header("Hoạt ảnh")]
+    public Animator anim;
+
+    void Start()
+    {
+        // Tự động tìm Animator giống file Controller (Không cần kéo thả ngoài Inspector)
+        //anim = GetComponent<Animator>(); 
+    }
 
     void Update()
     {
         if (GameManager.Instance.GameOver)
         {
-            // Nếu game kết thúc, tắt highlight ô cuối cùng nếu có
-            if (lastTile != null) lastTile.SetHighlight(false);
+            ClearHighlight();
             return;
         }
 
-        // Bắn Ray từ giữa màn hình (0.5, 0.5)
         Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0));
         RaycastHit hit;
 
@@ -26,41 +33,41 @@ public class PlayerInteraction : MonoBehaviour
 
             if (currentTile != null)
             {
-                // KIỂM TRA HIGHLIGHT
+                // ---- PHẦN 1: XỬ LÝ HIGHLIGHT (Đồ họa) ----
                 if (currentTile != lastTile)
                 {
-                    // Tắt highlight của ô cũ
-                    if (lastTile != null) lastTile.SetHighlight(false);
-                    
-                    // Bật highlight của ô mới
-                    currentTile.SetHighlight(true);
-                    
-                    // Gán ô hiện tại vào biến tạm
-                    lastTile = currentTile;
+                    ClearHighlight(); // Tắt ô cũ
+                    currentTile.SetHighlight(true); // Bật ô mới
+                    lastTile = currentTile; // Cập nhật lại biến tạm
                 }
 
-                // Click chuột trái để mở
+                // ---- PHẦN 2: XỬ LÝ TƯƠNG TÁC (Đứng độc lập bên ngoài) ----
+                
+                // Click trái để Mở
                 if (Input.GetMouseButtonDown(0))
+                {
+                    if (anim != null) anim.SetTrigger("Mine"); // Bạn đổi tên Trigger thành "Mine" rồi đúng không?
                     currentTile.Reveal();
+                }
 
-                // Click chuột phải để cắm cờ
+                // Click phải để Cắm cờ
                 if (Input.GetMouseButtonDown(1))
+                {
                     currentTile.ToggleFlag();
+                }
             }
             else
             {
-                // Nếu tia Ray chạm vật thể khác không phải Tile
-                ClearHighlight();
+                ClearHighlight(); // Nhìn trúng cục đá, bờ tường... thì tắt highlight
             }
         }
         else
         {
-            // Nếu tia Ray không chạm gì cả
-            ClearHighlight();
+            ClearHighlight(); // Nhìn lên trời thì tắt highlight
         }
     }
 
-    // Hàm phụ trợ để dọn dẹp highlight khi nhìn ra ngoài không trung
+    // Viết lại hàm này cho gọn, dùng lại được nhiều chỗ
     private void ClearHighlight()
     {
         if (lastTile != null)

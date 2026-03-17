@@ -133,14 +133,23 @@ public class Tile : MonoBehaviour
             // THUA: Có 3 trường hợp
             if (IsMine && !Flagged && !Revealed)
             {
-                // 1. Ô có bom mà chưa tìm ra -> Hiện bom lên
+                // 1. Ô có bom mà chưa tìm ra -> Hiện bom lên NHƯNG KHÔNG NỔ
                 Revealed = true;
-                if (MineObject != null) MineObject.SetActive(true);
+                if (MineObject != null) 
+                {
+                    // Lấy script Explode (thuộc namespace Novasloth) và tắt nó đi
+                    Novasloth.Explode explodeScript = MineObject.GetComponent<Novasloth.Explode>();
+                    if (explodeScript != null)
+                    {
+                        explodeScript.enabled = false; // Tắt ngòi nổ
+                    }
+                    
+                    MineObject.SetActive(true); // Chỉ hiện mô hình 3D lên
+                }
             }
             else if (!IsMine && Flagged)
             {
                 // 2. KHÔNG có bom nhưng lại cắm cờ -> CẮM SAI
-                // Đổi nền thành đỏ, cờ vẫn giữ nguyên
                 rend.material.color = Color.red;
             }
             // 3. Có bom và cắm đúng cờ -> Cờ giữ nguyên, không làm gì cả

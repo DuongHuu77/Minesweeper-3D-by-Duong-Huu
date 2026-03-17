@@ -15,6 +15,9 @@ public class PlayerController : MonoBehaviour
     public float TopLookLimit = 80f;
     public float BottomLookLimit = -80f;
 
+    [Header("Hoạt ảnh")]
+    public Animator anim;
+
     private CharacterController _characterController;
     private Vector3 _velocity;
     private float _verticalRotation;
@@ -46,6 +49,9 @@ public class PlayerController : MonoBehaviour
         Vector3 move = transform.right * moveX + transform.forward * moveZ;
 
         float speed = Input.GetKey(KeyCode.LeftShift) ? SprintSpeed : MoveSpeed;
+
+        Vector3 movement = new Vector3(moveX, 0, moveZ);
+        anim.SetFloat("Speed", movement.magnitude);
 
         if (Input.GetButtonDown("Jump") && isGrounded)
         {
